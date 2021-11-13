@@ -2,11 +2,14 @@ import 'package:abcd/filterchip.dart';
 import 'package:abcd/shapes.dart';
 import 'package:flutter/material.dart';
 
+import 'nav.dart';
+
 
 
 void main(){
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       title:"newone",
       home: FilterChipDisplay(),
       theme: ThemeData(

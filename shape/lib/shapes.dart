@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:abcd/data/apidata.dart';
 import 'package:abcd/listcontroll.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 
 
-List<String> data = [
+List<String> kdata = [
   "CUSHION",
   "PEAR",
     "OVAL",
@@ -31,13 +32,15 @@ class mshapes extends StatefulWidget {
 }
 
 class _mshapesState extends State<mshapes> {
+
+    List<User> users=[];
   // List allnew = resp.toList()..toSet();
   var controller = Get.put(selectcontroll());
 
   void openfilter (context) async{
     await FilterListDialog.display<String>(context, 
-    listData: data, 
-    selectedListData: controller.getselectedlist(),
+    listData: kdata, 
+    selectedListData: controller.selectedlist,
     headlineText: 'select shape',
     closeIconColor: Colors.black,
     applyButtonTextStyle: TextStyle(fontSize: 20),
@@ -54,7 +57,7 @@ class _mshapesState extends State<mshapes> {
          return [];
     } ,
     onApplyButtonClick: (list){
-        controller.setselectedlist(List<String>.from(list!));
+        controller.selectedlist.value=(List<String>.from(list!));
         Navigator.of(context).pop();
     });
 
@@ -64,16 +67,16 @@ class _mshapesState extends State<mshapes> {
 
 
 
-  List<dynamic> resp = [];
+  // List<dynamic> resp = [];
 
-  Future fdata () async{
+  // Future fdata () async{
 
-    var fildata = await http.get(Uri.parse("http://192.168.29.222/neweasy/phpfiles/shm.php"));
-    // resp=jsonDecode(fildata.body);
-    resp = fildata.body as List ;  
-     print(resp);
+  //   var fildata = await http.get(Uri.parse("http://192.168.29.222/neweasy/phpfiles/shm.php"));
+  //   // resp=jsonDecode(fildata.body);
+  //   resp = fildata.body as List ;  
+  //    print(resp);
      
-  }
+  // }
 //  @override
 //   void initState() {
 //     // TODO: implement initState
@@ -87,10 +90,18 @@ class _mshapesState extends State<mshapes> {
     return Scaffold(
       appBar: AppBar(
         title: Text("filter"),),
-        body: Center(),
+        body: Center(
+          child: Obx(()=>controller.selectedlist.value.length== 0
+          ? Text("no data")
+          :Wrap(children: controller.selectedlist.map((e)=>
+          Padding(padding: const EdgeInsets.all(8),
+          child: Chip(label: Text(e),),)).toList(),
+          )
+          )
+        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
-          onPressed: (){}// => openfilter(context),
+          onPressed: () => openfilter(context),
         ),
         
     );
